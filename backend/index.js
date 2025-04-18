@@ -6,12 +6,7 @@ const PORT = process.env.PORT || 5001;
 
 app.use(cors());
 app.use(express.json()); // to parse JSON request bodies
-// Import models
-app.use("/api/patients", require("./models/Patient"));
-app.use("/api/medicaments", require("./models/Medicament"));
-app.use("/api/allergies", require("./models/Allergie"));
-app.use("/api/patient-medicaments", require("./models/PatientMedicament"));
-app.use("/api/patient-allergies", require("./models/PatientAllergie"));
+
 
 //Import routes
 app.use("/api/patients", require("./routes/patients"));
