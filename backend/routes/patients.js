@@ -32,4 +32,16 @@ router.delete("/:id", async (req, res) => {
   res.json({ message: "Patient supprimé" });
 });
 
+// Find a patient by NSS
+router.get("/nss/:nss", async (req, res) => {
+  try {
+    const patient = await Patient.findOne({ nss: req.params.nss });
+    if (!patient) {
+      return res.status(404).json({ message: "Patient non trouvé" });
+    }
+    res.json(patient);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;
