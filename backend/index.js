@@ -29,7 +29,7 @@ app.listen(PORT, () => {
 
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://abdelrahmanmhamdy:dodokoka@cluster0.h2ltp2h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect('mongodb+srv://abdelrahmanmhamdy:dodokoka@cluster0.h2ltp2h.mongodb.net/cabinet_medical?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
