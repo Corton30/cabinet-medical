@@ -34,20 +34,26 @@ router.put("/:patientId", async (req, res) => {
   try {
     const { allergies } = req.body;
 
+    // Log the received allergies for debugging
+    console.log("Received allergies:", allergies);
+
     // Validate the allergies array
-    if (!allergies || !Array.isArray(allergies)) {
-      return res.status(400).json({ error: "Invalid allergies data." });
+    if (!allergies || !Array.isArray(allergies) || allergies.some((id) => typeof id !== "string")) {
+      return res.status(400).json({ error: "Invalid allergies data. Ensure it is an array of strings." });
     }
 
     // Remove existing allergies for the patient
-    await PatientAllergie.deleteMany({ id_patient: req.params.patientId });
+    const deleteResult = await PatientAllergie.deleteMany({ id_patient: req.params.patientId });
+    console.log("Deleted existing allergies:", deleteResult);
 
     // Add the new allergies
     const newAllergies = allergies.map((allergyId) => ({
       id_patient: req.params.patientId,
       id_allergie: allergyId,
     }));
-    await PatientAllergie.insertMany(newAllergies);
+
+    const insertResult = await PatientAllergie.insertMany(newAllergies);
+    console.log("Inserted new allergies:", insertResult);
 
     res.status(200).json({ message: "Allergies updated successfully." });
   } catch (err) {

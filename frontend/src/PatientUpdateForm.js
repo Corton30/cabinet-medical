@@ -22,7 +22,8 @@ const PatientUpdateForm = () => {
   const [selectedAllergy, setSelectedAllergy] = useState(""); // Currently selected allergy
   const [message, setMessage] = useState("");
 
-  // Fetch patient data and allergies
+  // console.log("Moh Before" );
+  //Fetch patient data and allergies
   useEffect(() => {
     const fetchPatientAndAllergies = async () => {
       try {
@@ -38,11 +39,22 @@ const PatientUpdateForm = () => {
         const patientAllergiesResponse = await axios.get(
           `http://localhost:5001/api/patient-allergies/${patientId}`
         );
+
+        // Log the patient allergies response to see its structure
+      //  console.log("Patient allergies response:", patientAllergiesResponse.data);
+
+      //  console.log("PA:", patientAllergiesResponse.data.map((pa) => pa.id_allergie));
+
         setSelectedAllergies(patientAllergiesResponse.data.map((pa) => pa.id_allergie));
+
+        // console.log("pa.id_allergie:", pa.id_allergie);
+
       } catch (err) {
         console.error("Error fetching data:", err);
       }
     };
+
+    // console.log("Moh After" );
 
     if (patientId) {
       fetchPatientAndAllergies();
