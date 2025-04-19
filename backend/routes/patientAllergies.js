@@ -12,4 +12,29 @@ router.get("/", async (req, res) => {
   res.json(list);
 });
 
+router.put("/:patientId", async (req, res) => {
+  try {
+    const { allergies } = req.body;
+
+    // Validate the allergies array
+    if (!allergies || !Array.isArray(allergies)) {
+      return res.status(400).json({ error: "Invalid allergies data." });
+    }
+
+    // Remove existing allergies for the patient
+    await PatientAllergie.deleteMany({ id_patient: req.params.patientId });
+
+    // Add the new allergies
+    const newAllergies = allergies.map((allergyId) => ({
+      id_patient: req.params.patientId,
+      id_allergie: allergyId,
+    }));
+    await PatientAllergie.insertMany(newAllergies);
+
+    res.status(200).json({ message: "Allergies updated successfully." });
+  } catch (err) {
+    console.error("Error updating allergies:", err);
+    res.status(500).json({ error: "Error updating allergies." });
+  }
+});
 module.exports = router;
