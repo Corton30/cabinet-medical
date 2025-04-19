@@ -8,7 +8,19 @@ router.post("/", async (req, res) => {
     const saved = await patient.save();
     res.status(201).json(saved);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    if (err.code === 11000) {
+      // Check which field caused the duplicate key error
+      const duplicateField = Object.keys(err.keyValue)[0]; // Get the field name
+      if (duplicateField === "nss") {
+        res.status(400).json({ error: "Le NSS est déjà utilisé." });
+      } else if (duplicateField === "email") {
+        res.status(400).json({ error: "L'email est déjà utilisé." });
+      } else {
+        res.status(400).json({ error: "Une clé unique est déjà utilisée." });
+      }
+    } else {
+      res.status(400).json({ error: err.message });
+    }
   }
 });
 
