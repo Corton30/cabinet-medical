@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Patient = require("../models/Patient");
+const PatientAllergie = require("../models/PatientAllergie");
+
 
 router.post("/", async (req, res) => {
   try {
@@ -51,7 +53,10 @@ router.get("/nss/:nss", async (req, res) => {
     if (!patient) {
       return res.status(404).json({ message: "Patient non trouvé" });
     }
-    res.json(patient);
+    // Fetch the patient's allergies
+    const allergies = await PatientAllergie.find({ id_patient: patient._id }).populate("id_allergie");
+
+    res.json({ ...patient.toObject(), allergies });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

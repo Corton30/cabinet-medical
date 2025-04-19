@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const PatientSearch = () => {
   const [nss, setNss] = useState("");
   const [patient, setPatient] = useState(null);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     try {
@@ -14,6 +16,12 @@ const PatientSearch = () => {
     } catch (err) {
       setPatient(null);
       setError(err.response?.data?.message || "An error occurred");
+    }
+  };
+
+  const handleUpdate = () => {
+    if (patient && patient._id) {
+      navigate(`/patient-update/${patient._id}`); // Navigate to the update form with the patient ID
     }
   };
 
@@ -45,6 +53,19 @@ const PatientSearch = () => {
           <p><strong>Email:</strong> {patient.email}</p>
           <p><strong>Sexe:</strong> {patient.sexe}</p>
           <p><strong>Allergies Connues:</strong> {patient.allergies_connues ? "Oui" : "Non"}</p>
+          {patient.allergies && patient.allergies.length > 0 && (
+            <div>
+              <h3>Allergies</h3>
+              <ul>
+                {patient.allergies.map((allergy) => (
+                  <li key={allergy.id_allergie._id}>{allergy.id_allergie.nom}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <button onClick={handleUpdate} style={{ padding: "10px 20px", marginTop: "20px" }}>
+            Update Patient Info
+          </button>
         </div>
       )}
     </div>
