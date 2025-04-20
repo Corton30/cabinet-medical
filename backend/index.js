@@ -14,7 +14,7 @@ app.use("/api/medicaments", require("./routes/medicaments"));
 app.use("/api/allergies", require("./routes/allergies"));
 app.use("/api/patient-medicaments", require("./routes/patientMedicaments"));
 app.use("/api/patient-allergies", require("./routes/patientAllergies"));
-
+app.use("/api/ordonnances", require("./routes/ordonnances"));
 
 
 
