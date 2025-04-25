@@ -1,10 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar"; // Import the Sidebar component
 
 const patients = ["Jonn Russe", "Faau Lavisov", "Jean Piden", "Eric Wode"];
 
 export default function DoctorDashboard() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove the token from localStorage
+    navigate("/login"); // Redirect to the login page
+  };
+
   return (
     <div className="flex h-screen font-sans">
       {/* Sidebar */}
@@ -16,7 +23,12 @@ export default function DoctorDashboard() {
           <h2 className="text-2xl font-semibold">Patients</h2>
           <div className="flex items-center gap-4">
             <span>{new Date().toLocaleTimeString()} {new Date().toLocaleDateString()}</span>
-            <button className="bg-white border px-3 py-1 rounded hover:bg-gray-200">Déconnexion</button>
+            <button
+              onClick={handleLogout} // Attach the logout handler
+              className="bg-white border px-3 py-1 rounded hover:bg-red-600 hover:text-white"
+            >
+              Déconnexion
+            </button>
           </div>
         </header>
 

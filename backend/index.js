@@ -9,12 +9,14 @@ app.use(express.json()); // to parse JSON request bodies
 
 
 //Import routes
+app.use("/api/auth", require("./routes/auth"));
 app.use("/api/patients", require("./routes/patients"));
 app.use("/api/medicaments", require("./routes/medicaments"));
 app.use("/api/allergies", require("./routes/allergies"));
 app.use("/api/patient-medicaments", require("./routes/patientMedicaments"));
 app.use("/api/patient-allergies", require("./routes/patientAllergies"));
 app.use("/api/ordonnances", require("./routes/ordonnances"));
+app.use("/api/medicaments", require("./routes/medicaments"));
 
 
 

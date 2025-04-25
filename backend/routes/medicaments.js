@@ -7,9 +7,18 @@ router.post("/", async (req, res) => {
   res.status(201).json(await medicament.save());
 });
 
+
 router.get("/", async (req, res) => {
-  const meds = await Medicament.find();
-  res.json(meds);
+  try {
+    const medicaments = await Medicament.find();
+    res.json(medicaments);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch medicaments" });
+  }
 });
+
+module.exports = router;
+
+
 
 module.exports = router;
