@@ -6,6 +6,7 @@ import PatientForm from "./components/PatientForm";
 import PatientSearch from "./components/PatientSearch";
 import PatientUpdateForm from "./components/PatientUpdateForm";
 import DoctorDashboard from "./components/DoctorDashboard"; 
+import WriteOrdonnance from "./components/WriteOrdonnance";
 
 
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/patient-form" element={<PatientForm />} />
           <Route path="/patient-search" element={<PatientSearch />} />
           <Route path="/patient-update/:id" element={<PatientUpdateForm />} />
+          <Route path="/write-ordonnance/:nss" element={<WriteOrdonnance />} />
 
           
 
