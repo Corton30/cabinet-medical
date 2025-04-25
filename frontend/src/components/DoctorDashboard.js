@@ -1,4 +1,6 @@
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
+import Sidebar from "./Sidebar"; // Import the Sidebar component
 
 const patients = ["Jonn Russe", "Faau Lavisov", "Jean Piden", "Eric Wode"];
 
@@ -6,18 +8,7 @@ export default function DoctorDashboard() {
   return (
     <div className="flex h-screen font-sans">
       {/* Sidebar */}
-      <aside className="w-64 bg-blue-900 text-white flex flex-col p-4 space-y-6 fixed h-full">
-        <h1 className="text-xl font-bold">DOC_Médecin</h1>
-        <nav className="space-y-3">
-          <SidebarItem icon="🏠" label="Accueil" />
-          <SidebarItem icon="👤" label="Patients" />
-          <SidebarItem icon="📆" label="Calendrier" />
-          <SidebarItem icon="💊" label="Ordonnances" />
-          <SidebarItem icon="📄" label="Documents" />
-          <SidebarItem icon="🔍" label="Vidal" />
-          <SidebarItem icon="⚙️" label="Paramètres" />
-        </nav>
-      </aside>
+      <Sidebar />
 
       {/* Main Content */}
       <main className="ml-64 flex-1 bg-gray-100 p-6 overflow-y-auto">
@@ -29,7 +20,12 @@ export default function DoctorDashboard() {
           </div>
         </header>
 
-        <button className="bg-blue-600 text-white px-4 py-2 rounded mb-4">Ajouter un patient</button>
+        {/* Bouton pour ajouter un patient */}
+        <Link to="/patient-form">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded mb-4">
+            Ajouter un patient
+          </button>
+        </Link>
 
         <div className="grid grid-cols-2 gap-6">
           <div className="bg-white shadow p-4 rounded">
@@ -49,15 +45,6 @@ export default function DoctorDashboard() {
           </div>
         </div>
       </main>
-    </div>
-  );
-}
-
-function SidebarItem({ icon, label }) {
-  return (
-    <div className="flex items-center space-x-3 hover:bg-blue-800 p-2 rounded cursor-pointer">
-      <span>{icon}</span>
-      <span>{label}</span>
     </div>
   );
 }
