@@ -50,6 +50,29 @@ const Calendar = () => {
     setIsModalOpen(true); // Open the modal
   };
 
+  // Handle changes to the start time
+  const handleStartTimeChange = (e) => {
+    const startTime = e.target.value;
+    const startDate = new Date(startTime);
+    const endDate = new Date(startDate.getTime() + 30 * 60 * 1000); // Add 30 minutes
+
+    // Format the date to "YYYY-MM-DDTHH:mm" without converting to UTC
+    const formatDate = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    };
+
+    setNewEvent({
+      ...newEvent,
+      start: startTime,
+      end: formatDate(endDate), // Use the formatted end date
+    });
+  };
+
   // Handle adding the new event
   const handleAddEvent = () => {
     if (newEvent.patientId && newEvent.start && newEvent.end) {
@@ -115,7 +138,7 @@ const Calendar = () => {
                 <input
                   type="datetime-local"
                   value={newEvent.start}
-                  onChange={(e) => setNewEvent({ ...newEvent, start: e.target.value })}
+                  onChange={handleStartTimeChange} // Automatically set the end time
                   className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>

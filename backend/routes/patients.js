@@ -36,30 +36,62 @@ router.get("/:id", async (req, res) => {
   res.json(patient);
 });
 
+// router.put("/:patientId", async (req, res) => {
+//   try {
+//     const { allergies } = req.body;
+
+//     console.log("Received allergies:", allergies); // Debugging
+
+//     if (!allergies || !Array.isArray(allergies)) {
+//       return res.status(400).json({ error: "Invalid allergies data." });
+//     }
+
+//     // Remove existing allergies for the patient
+//     await PatientAllergie.deleteMany({ id_patient: req.params.patientId });
+
+//     // Add the new allergies
+//     const newAllergies = allergies.map((allergyId) => ({
+//       id_patient: req.params.patientId,
+//       id_allergie: allergyId,
+//     }));
+//     await PatientAllergie.insertMany(newAllergies);
+
+//     res.status(200).json({ message: "Allergies updated successfully." });
+//   } catch (err) {
+//     console.error("Error updating allergies:", err); // Log the error
+//     res.status(500).json({ error: "Error updating allergies." });
+//   }
+// });
+
 router.put("/:patientId", async (req, res) => {
   try {
-    const { allergies } = req.body;
+    const { patientId } = req.params;
+    const { allergies, ...patientData } = req.body;
 
-    console.log("Received allergies:", allergies); // Debugging
+    // Update patient's basic information (excluding allergies)
+    const updatedPatient = await Patient.findByIdAndUpdate(patientId, patientData, { new: true });
 
-    if (!allergies || !Array.isArray(allergies)) {
-      return res.status(400).json({ error: "Invalid allergies data." });
+    if (!updatedPatient) {
+      return res.status(404).json({ error: "Patient not found" });
     }
 
-    // Remove existing allergies for the patient
-    await PatientAllergie.deleteMany({ id_patient: req.params.patientId });
+    // Update patient's allergies if provided
+    if (allergies) {
+      // Remove existing allergies for the patient
+      await PatientAllergie.deleteMany({ id_patient: patientId });
 
-    // Add the new allergies
-    const newAllergies = allergies.map((allergyId) => ({
-      id_patient: req.params.patientId,
-      id_allergie: allergyId,
-    }));
-    await PatientAllergie.insertMany(newAllergies);
+      // Add the new allergies
+      const newAllergies = allergies.map((allergyId) => ({
+        id_patient: patientId,
+        id_allergie: allergyId,
+      }));
+      await PatientAllergie.insertMany(newAllergies);
+    }
 
-    res.status(200).json({ message: "Allergies updated successfully." });
+    res.status(200).json({ message: "Patient updated successfully", patient: updatedPatient });
   } catch (err) {
-    console.error("Error updating allergies:", err); // Log the error
-    res.status(500).json({ error: "Error updating allergies." });
+    console.error("Error updating patient:", err);
+    res.status(500).json({ error: "Error updating patient" });
   }
 });
 
