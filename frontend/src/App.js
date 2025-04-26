@@ -7,7 +7,8 @@ import PatientSearch from "./components/PatientSearch";
 import PatientUpdateForm from "./components/PatientUpdateForm";
 import DoctorDashboard from "./components/DoctorDashboard"; 
 import WriteOrdonnance from "./components/WriteOrdonnance";
-import Calendar from "./components/Calendar"; // Import the Calendar component
+import Calendar from "./components/Calendar";
+import Ordonnance from "./components/Ordonnance"; // Import the Ordonnance component
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/patient-update/:id" element={<PatientUpdateForm />} />
           <Route path="/write-ordonnance/:nss" element={<WriteOrdonnance />} />
           <Route path="/calendar" element={<Calendar />} /> {/* Add this route */}
+          <Route path="/ordonnance" element={<Ordonnance />} /> {/* Add this route */}
         </Routes>
       </div>
     </Router>
