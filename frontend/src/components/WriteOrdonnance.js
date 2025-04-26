@@ -11,7 +11,27 @@ const WriteOrdonnance = () => {
   const [dose, setDose] = useState(""); // Field for dose
   const [frequence, setFrequence] = useState(""); // Field for frequency
   const [ordonnanceMedicaments, setOrdonnanceMedicaments] = useState([]);
+  const [comments, setComments] = useState(""); // Field for comments
   const [addError, setAddError] = useState(""); // Error message for "Ajouter"
+  const [patient, setPatient] = useState({ nom: "", prenom: "" }); // State for patient details
+
+  // Generate ordonnance number automatically
+  useEffect(() => {
+    const generateOrdonnanceNumber = () => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+      const day = String(now.getDate()).padStart(2, "0");
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const seconds = String(now.getSeconds()).padStart(2, "0");
+
+      // Combine into the desired format
+      return `ORD-${year}${month}${day}${hours}${minutes}${seconds}`;
+    };
+
+    setOrdonnanceNumber(generateOrdonnanceNumber());
+  }, []);
 
   useEffect(() => {
     // Fetch the list of medicaments
@@ -23,8 +43,20 @@ const WriteOrdonnance = () => {
         console.error("Failed to fetch medicaments:", err);
       }
     };
+
+    // Fetch patient details using NSS
+    const fetchPatientDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5001/api/patients/nss/${nss}`);
+        setPatient(response.data); // Set patient details
+      } catch (err) {
+        console.error("Failed to fetch patient details:", err);
+      }
+    };
+
     fetchMedicaments();
-  }, []);
+    fetchPatientDetails();
+  }, [nss]);
 
   const handleAddMedicament = () => {
     // Validate fields for "Ajouter"
@@ -54,6 +86,7 @@ const WriteOrdonnance = () => {
       const ordonnance = {
         ordonnance_number: ordonnanceNumber, // Include ordonnance number
         patient_nss: nss,
+        comments, // Include comments
         medicaments: ordonnanceMedicaments.map(({ id, dose, frequence }) => ({
           id_medicament: id,
           dose,
@@ -75,16 +108,24 @@ const WriteOrdonnance = () => {
 
       {/* Main Content */}
       <main className="ml-64 flex-1 bg-gray-100 p-6 overflow-y-auto">
-        <h2 className="text-2xl font-bold mb-4">Créer une ordonnance pour NSS: {nss}</h2>
+        <h2 className="text-2xl font-bold mb-4">Créer une ordonnance pour: {patient.nom.toUpperCase()  || "Chargement..."}&nbsp;{patient.prenom || "Chargement..."}</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block font-medium mb-2">Numéro d'ordonnance</label>
             <input
               type="text"
               value={ordonnanceNumber}
-              onChange={(e) => setOrdonnanceNumber(e.target.value)}
+              readOnly // Make the field read-only
+              className="w-full border px-3 py-2 rounded bg-gray-100"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block font-medium mb-2">Commentaires</label>
+            <textarea
+              value={comments}
+              onChange={(e) => setComments(e.target.value)}
               className="w-full border px-3 py-2 rounded"
-              required
+              placeholder="Ajouter des commentaires (facultatif)"
             />
           </div>
           <div className="mb-4">
