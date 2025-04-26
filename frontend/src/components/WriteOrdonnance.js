@@ -5,11 +5,13 @@ import Sidebar from "./Sidebar"; // Import the Sidebar component
 
 const WriteOrdonnance = () => {
   const { nss } = useParams(); // Get NSS from the URL
+  const [ordonnanceNumber, setOrdonnanceNumber] = useState(""); // Field for ordonnance number
   const [medicaments, setMedicaments] = useState([]);
   const [selectedMedicament, setSelectedMedicament] = useState("");
-  const [dose, setDose] = useState("");
-  const [frequence, setFrequence] = useState("");
+  const [dose, setDose] = useState(""); // Field for dose
+  const [frequence, setFrequence] = useState(""); // Field for frequency
   const [ordonnanceMedicaments, setOrdonnanceMedicaments] = useState([]);
+  const [addError, setAddError] = useState(""); // Error message for "Ajouter"
 
   useEffect(() => {
     // Fetch the list of medicaments
@@ -25,16 +27,21 @@ const WriteOrdonnance = () => {
   }, []);
 
   const handleAddMedicament = () => {
-    if (selectedMedicament && dose && frequence) {
-      const medicament = medicaments.find((m) => m._id === selectedMedicament);
-      setOrdonnanceMedicaments([
-        ...ordonnanceMedicaments,
-        { id: selectedMedicament, nom: medicament.nom, dose, frequence },
-      ]);
-      setSelectedMedicament("");
-      setDose("");
-      setFrequence("");
+    // Validate fields for "Ajouter"
+    if (!selectedMedicament || !dose || !frequence) {
+      setAddError("Veuillez remplir tous les champs pour ajouter un médicament.");
+      return;
     }
+
+    const medicament = medicaments.find((m) => m._id === selectedMedicament);
+    setOrdonnanceMedicaments([
+      ...ordonnanceMedicaments,
+      { id: selectedMedicament, nom: medicament.nom, dose, frequence },
+    ]);
+    setSelectedMedicament("");
+    setDose("");
+    setFrequence("");
+    setAddError(""); // Clear error message after successful addition
   };
 
   const handleRemoveMedicament = (id) => {
@@ -45,6 +52,7 @@ const WriteOrdonnance = () => {
     e.preventDefault();
     try {
       const ordonnance = {
+        ordonnance_number: ordonnanceNumber, // Include ordonnance number
         patient_nss: nss,
         medicaments: ordonnanceMedicaments.map(({ id, dose, frequence }) => ({
           id_medicament: id,
@@ -69,6 +77,16 @@ const WriteOrdonnance = () => {
       <main className="ml-64 flex-1 bg-gray-100 p-6 overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4">Créer une ordonnance pour NSS: {nss}</h2>
         <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block font-medium mb-2">Numéro d'ordonnance</label>
+            <input
+              type="text"
+              value={ordonnanceNumber}
+              onChange={(e) => setOrdonnanceNumber(e.target.value)}
+              className="w-full border px-3 py-2 rounded"
+              required
+            />
+          </div>
           <div className="mb-4">
             <label className="block font-medium mb-2">Médicament</label>
             <select
@@ -102,6 +120,7 @@ const WriteOrdonnance = () => {
               className="w-full border px-3 py-2 rounded"
             />
           </div>
+          {addError && <p className="text-red-600 mb-4">{addError}</p>}
           <button
             type="button"
             onClick={handleAddMedicament}
