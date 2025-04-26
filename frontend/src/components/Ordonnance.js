@@ -13,11 +13,21 @@ const Ordonnance = () => {
   const handleSearch = async () => {
     try {
       setError(""); // Clear previous errors
-      const response = await axios.get(`http://localhost:5001/api/patients/nss/${nss}`);
-      setPatient(response.data); // Set the patient data
+
+      // Fetch patient details by NSS
+      const patientResponse = await axios.get(`http://localhost:5001/api/patients/nss/${nss}`);
+      setPatient(patientResponse.data); // Set the patient data
+
+      // Fetch ordonnances filtered by NSS
+      const ordonnancesResponse = await axios.get(`http://localhost:5001/api/ordonnances`);
+      const filteredOrdonnances = ordonnancesResponse.data.filter(
+        (ordonnance) => ordonnance.patient_nss === parseInt(nss)
+      );
+      setOrdonnances(filteredOrdonnances); // Update the ordonnances state with filtered data
     } catch (err) {
       setPatient(null);
-      setError(err.response?.data?.message || "Veuillez saisir le numéro de sécurité sociale");
+      setOrdonnances([]); // Clear ordonnances if no match is found
+      setError(err.response?.data?.message || "Aucune ordonnance trouvée pour ce NSS");
     }
   };
 

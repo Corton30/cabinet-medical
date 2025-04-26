@@ -27,10 +27,13 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Get all ordonnances
+// Get all ordonnances or filter by NSS
 router.get("/", async (req, res) => {
+  const { nss } = req.query;
+
   try {
-    const ordonnances = await Ordonnance.find().populate("medicaments.id_medicament");
+    const query = nss ? { patient_nss: nss } : {}; // Filter by NSS if provided
+    const ordonnances = await Ordonnance.find(query).populate("medicaments.id_medicament");
     res.status(200).json(ordonnances);
   } catch (err) {
     console.error("Error fetching ordonnances:", err);
