@@ -135,6 +135,7 @@ const PatientForm = () => {
                   value={formData.date_naissance}
                   onChange={handleChange}
                   required
+                  max={new Date().toISOString().split("T")[0]} // Set max to today's date
                   className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
