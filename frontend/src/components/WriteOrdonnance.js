@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
 import Sidebar from "./Sidebar"; // Import the Sidebar component
 
 const WriteOrdonnance = () => {
   const { nss } = useParams(); // Get NSS from the URL
+  const navigate = useNavigate(); // Initialize the navigate function
   const [ordonnanceNumber, setOrdonnanceNumber] = useState(""); // Field for ordonnance number
   const [medicaments, setMedicaments] = useState([]);
   const [selectedMedicament, setSelectedMedicament] = useState("");
@@ -95,6 +96,7 @@ const WriteOrdonnance = () => {
       };
       await axios.post("http://localhost:5001/api/ordonnances", ordonnance);
       alert("Ordonnance created successfully!");
+      navigate("/ordonnance"); // Redirect to /ordonnance after success
     } catch (err) {
       console.error("Failed to create ordonnance:", err);
       alert("Failed to create ordonnance.");
@@ -108,7 +110,7 @@ const WriteOrdonnance = () => {
 
       {/* Main Content */}
       <main className="ml-64 flex-1 bg-gray-100 p-6 overflow-y-auto">
-        <h2 className="text-2xl font-bold mb-4">Créer une ordonnance pour: {patient.nom.toUpperCase()  || "Chargement..."}&nbsp;{patient.prenom || "Chargement..."}</h2>
+        <h2 className="text-2xl font-bold mb-4">Créer une ordonnance pour: {patient.nom.toUpperCase() || "Chargement..."}&nbsp;{patient.prenom || "Chargement..."}</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block font-medium mb-2">Numéro d'ordonnance</label>

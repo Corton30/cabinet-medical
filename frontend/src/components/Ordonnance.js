@@ -16,7 +16,7 @@ const Ordonnance = () => {
       setPatient(response.data); // Set the patient data
     } catch (err) {
       setPatient(null);
-      setError(err.response?.data?.message || "An error occurred");
+      setError(err.response?.data?.message || "Veuillez saisir le numéro de sécurité sociale");
     }
   };
 
